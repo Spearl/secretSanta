@@ -21,34 +21,39 @@ def secretSanta(names, couples)
   end
 
   names.each do |name|
-    peeps = possibilities[name].sample
-    puts "#{name} => #{peeps}"
-    puts
+    match = possibilities[name].sample
+    #puts "#{name} => #{match}"
+    #puts
     names.each do |name|
-      possibilities[name].delete(peeps)
+      possibilities[name].delete(match)
     end
-    santa_pairs[name] = peeps
+    santa_pairs[name] = match
+  end
+
+  santa_pairs.each_pair do |k,v|
+    if k == v
+      raise "#{k} got themselves!"
+    end
+  end
+
+# Added .compact, because that removes "nil" as a value
+  if santa_pairs.values.uniq.compact.length != PEOPLE.length
+    raise "There are names missing!"
+  end
+
+  COUPLES.each do |couple|
+    if santa_pairs[couple[0]] == couple[1] || santa_pairs[couple[1]] == couple[0]
+      raise "Someone got their SO!"
+    end
   end
   return santa_pairs
 end
 
-pairs = secretSanta(PEOPLE, COUPLES)
+begin
+  pairs = secretSanta(PEOPLE, COUPLES)
+rescue
+  retry
+end
 pairs.each_pair do |k,v|
   puts "#{k} => #{v}"
-end
-
-pairs.each_pair do |k,v|
-  if k == v
-    raise "#{k} got themselves!"
-  end
-end
-
-if pairs.values.uniq.length != PEOPLE.length
-  raise "There are names missing!"
-end
-
-COUPLES.each do |couple|
-  if pairs[couple[0]] == couple[1] || pairs[couple[1]] == couple[0]
-    raise "Someone got their SO!"
-  end
 end
