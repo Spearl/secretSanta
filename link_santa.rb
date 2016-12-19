@@ -10,13 +10,12 @@ end
 
 def secretSanta(names, couples)
   # Create SO lookup
-  couples_hash = {}
-  couples.each do |couple|
-    couples_hash[couple.first] = couple.last
-    couples_hash[couple.last] = couple.first
-  end
+  so_lookup = Hash[couples].merge(Hash[couples].invert)
 
+  # Randomize name order
   names.shuffle!
+
+  # Create linked list of santas
   santas = names.map { |name| Santa.new(name) }
   santas.each_with_index do |santa, i|
     santa.to_santa = santas[i + 1]
