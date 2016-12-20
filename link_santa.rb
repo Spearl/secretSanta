@@ -5,7 +5,7 @@ class Santa
     @name = name
   end
   attr_reader :name
-  attr_accessor :to_santa, :from_santa
+  attr_accessor :to_santa
 end
 
 def secretSanta(names, couples)
@@ -19,23 +19,16 @@ def secretSanta(names, couples)
   santas = names.map { |name| Santa.new(name) }
   santas.each_with_index do |santa, i|
     santa.to_santa = santas[i + 1]
-    santa.from_santa = santas[i - 1]
   end
   current = head = santas[-1].to_santa = santas[0]
 
   while current.to_santa != head do
-    if current.to_santa.name == couples_hash[current.name]
-      # Remove current santa
-      current.from_santa.to_santa = current.to_santa
-      current.to_santa.from_santa = current.from_santa
-
-      # Insert two spots down
-      new_from_santa = current.to_santa.to_santa
-      new_to_santa = new_from_santa.to_santa
-      new_from_santa.to_santa = current
-      new_to_santa.from_santa = current
-      current.to_santa = new_to_santa
-      current.from_santa = new_from_santa
+    if current.to_santa.name == so_lookup[current.name]
+      # Insert next santa one spot down
+      moving_santa = current.to_santa
+      current.to_santa = moving_santa.to_santa
+      moving_santa.to_santa = moving_santa.to_santa.to_santa
+      current.to_santa.to_santa = moving_santa
 
       # Start over
       current = head
