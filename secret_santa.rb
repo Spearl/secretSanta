@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 
-PEOPLE = ['Landon', 'Katie', 'Iain', 'Liv', 'Sam', 'Kayla']
-COUPLES = [['Landon', 'Katie'], ['Iain', 'Liv'], ['Sam', 'Kayla']]
-
-def secretSanta(names, couples)
+def _secretSanta(names, couples)
   # Enter code here
   santa_pairs = {}
   couples_hash = {}
@@ -37,11 +34,11 @@ def secretSanta(names, couples)
   end
 
 # Added .compact, because that removes "nil" as a value
-  if santa_pairs.values.uniq.compact.length != PEOPLE.length
+  if santa_pairs.values.uniq.compact.length != names.length
     raise "There are names missing!"
   end
 
-  COUPLES.each do |couple|
+  couples.each do |couple|
     if santa_pairs[couple[0]] == couple[1] || santa_pairs[couple[1]] == couple[0]
       raise "Someone got their SO!"
     end
@@ -49,11 +46,10 @@ def secretSanta(names, couples)
   return santa_pairs
 end
 
-begin
-  pairs = secretSanta(PEOPLE, COUPLES)
-rescue
-  retry
-end
-pairs.each_pair do |k,v|
-  puts "#{k} => #{v}"
+def secretSanta(names, couples)
+  begin
+    return secretSanta(names, couples)
+  rescue
+    retry
+  end
 end
